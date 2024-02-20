@@ -1,1 +1,1 @@
-# projbp
+# Projektovanje baza podataka
