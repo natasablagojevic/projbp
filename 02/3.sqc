@@ -1,0 +1,63 @@
+/*
+ Napisati C/SQL program koji ispisuje indeks, ime, prezime, mesto rođenja (ukoliko je navedeno u bazi) i datum diplomiranja (ukoliko je navedeno u bazi) za studenta čiji se broj indeksa učitava sa standardnog ulaza.
+*/
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+EXEC SQL INCLUDE SQLCA;
+
+EXEC SQL BEGIN DECLARE SECTION;
+sqlint32 hIndeks;
+char hIme[51];
+char hPrezime[51];
+char hMestoRodjenja[51];
+short hIndMestoRodjenja; // indikatorska promenljiva
+char hDatDiplomiranja[11];
+short hIndDatDiplomiranja;
+EXEC SQL END DECLARE SECTION;
+
+void checkSQL(const char *msg)
+{
+  if (SQLCODE < 0) {
+    fprintf(stderr, "%s : %d", msg, SQLCODE);
+
+    EXEC SQL CONNECT RESET;
+    exit(EXIT_FAILURE);
+  }
+}
+
+int main()
+{
+
+  EXEC SQL CONNECT TO stud2020;
+  checkSQL("Konekcija");
+
+  scanf("%d", &hIndeks);
+
+  EXEC SQL 
+    SELECT indeks, ime, prezime, mestoRodjenja, datDiplomiranja
+    INTO :hIndeks, :hIme, :hPrezime, :hMestoRodjenja :hIndMestoRodjenja, :hDatDiplomiranja :hIndDatDiplomiranja
+    FROM da.dosije 
+    WHERE indeks = :hIndeks;
+  checkSQL("SELECT upit");
+
+  printf("+--------------+------------------------------+\n");
+  printf("|INDEKS        |%-30d|\n", hIndeks);
+  printf("|--------------|------------------------------|\n");
+  printf("|IME           |%-30s|\n", hIme);
+  printf("|--------------|------------------------------|\n");
+  printf("|PREZIME       |%-30s|\n", hPrezime);
+  printf("|--------------|------------------------------|\n");
+  printf("|MESTO RODJENJA|%-30s|\n", (hIndMestoRodjenja < 0) ? "NULL" : hMestoRodjenja);
+  printf("|--------------|------------------------------|\n");
+  printf("|DATUM DIPL.   |%-30s|\n", (hIndDatDiplomiranja < 0) ? "NULL" : hDatDiplomiranja);
+  printf("+--------------+------------------------------+\n");
+
+
+  EXEC SQL CONNECT RESET;
+  checkSQL("Prekidanje Konekcije");
+
+  return 0;
+}
