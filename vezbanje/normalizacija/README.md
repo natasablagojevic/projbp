@@ -25,7 +25,7 @@ K2:
     IV)  elementi koji se nalaze sa obe strane
 
 K3:
-  Grupisati I) i III) (siguran deo KK)
+  Grupisati I) i II) (siguran deo KK)
 
 K4:
   a) Ako se u III) dobije KK to je jedini KK
