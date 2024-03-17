@@ -7,7 +7,7 @@
 
 3NF: nema FZ nekljucnih atributa u nekljucne atribute
 
-BCNF: nema FZ nekljucnih atributa i kljucne atribute
+BCNF: nema FZ nekljucnih atributa u kljucne atribute
 ```
 
 ## Algoritam za nalazenje KK (kandidata za kljuc)
