@@ -136,3 +136,87 @@ Nabavlja(*^sifra_dobavljaca, *^sifra_artikla, kolicina, cena)
   Nabavlja[sifra_dobavljaca] < Nabavka[sifra_dobavljaca]
   Nabavlja[sifra_dobavljaca, sifra_artikla] < Dobavlja[sifra_dobavljaca, sifra_artikla]
 ```
+
+### Zadatak 3
+
+![Primer3](./slike/primer3.png)
+
+```
+K1:
+Zaposleni(*MRB, ime, prezime, adresa)
+Apoteka(*sifra, naziv, adresa)
+Lek(*sifre, naziv, pros_mesecne_potrebe)
+Nabavka(*sifra, rok_isporuke, nacin_placanja, ukupni_iznos, datum_isporuke, ^MBR_komercijaliste, ^sifra_veletrgovine)
+  Nabavka[MBR_komercijaliste] < Komercijalista[MBR]
+  Nabavka[sifra_veletrgovine] < Veletrgovina[sifra]
+
+Veletrgovina(*sifra, telefon, naziv, adresa)
+
+K2:
+Farmaceut(*^MBR, strucna_sprema)
+  Farmaceut[MBR] < Zaposleni[MBR]
+
+Komercijalista(*^MBR, telefon)
+  Komercijalista[MBR] < Zaposleni[MBR]
+
+K3:
+Zaposlen(*^sifra_apoteka, *^MBR_farmaceut, datum, dana, meseci)
+  Zaposlen[sifra_apteka] < Apoteka[sifra]
+  Zaposleni[MBR_farmaceut] < Farmaceut[MBR]
+
+Raspolaze(*^sifra_apoteka, *^sifra_lek, kolicina, pros_mes_potrebe)
+  Raspolaze[sifra_apoteka] < Apoteka[sifra]
+  Raspolaze[sifra_lek] < Lek[sifra]
+
+Isporucuje(*^sifra_lek, *^sifra_nabavka, kolicina)
+  Isporucuje[sifra_lek] < Lek[sifra]
+  Isporucuje[sifra_nabavka] < Nabavka[sifra]
+
+Isporucen(*^sifra_lek, *^sifra_nabavka, *^sifra_apoteka, kolicina)
+  Isporucen[sifra_lek, sifra_nabavka] < Isporucuje[sifra_lek, sifra_nabavka]
+  Isporucen[sifra_apoteka] < Apoteka[sifra]
+
+Zamena(*^sifra_lek1, *^sifra_lek2)
+  Zamena[sifra_lek1] < Lek[sifra]
+  Zamena[sifra_lek2] < Lek[sifra]
+```
+
+### Zadatak 4: ???
+
+![Primer4](./slike/primer4.png)
+
+```
+Biljka(*id, naziv, jed_mere, kolicina, min_dozv_zalihe, cena)
+Dobavljac(*id, naziv, adresa, drzava, telefon)
+Mesavina(*id, jed_mere, kolicina_za_zalihama, cena)
+Narudzbina(*id, datum, uslovi_placanja, ^id_kupca)
+  Narudzbina[id_kupca] < Kupac[id]
+
+Kupac(*id, naziv, adresa, telefon, osoba_za_kontakt)
+Racun(*id, ukupan_iznos, ^id_narudzbina)
+  Racun[id_narudzbina] < Narudzbina[id]
+
+Nabavka(*^id_dobavljaca, datum)
+  nabavka[id_dobavljaca] < Dobavljac[id]
+
+Naplata(*^id_racuna, redni_broj_rate, uplacen_iznos, datum_naplate)
+  Naplata[id_racuna] < Racun[id]
+
+SastojiSeOd(*^id_biljke, *^id_mesavine, kolicina)
+  SastojiSeOd[id_biljke] < Biljka[id]
+  SastojiSeOd[id_mesavine] < Mesavina[id]
+
+NalaziSe(*^id_mesavine, *^id_narudzbine, kolicina, cena)
+  NalaziSe[id_mesavine] < Mesavina[id]
+  NalaziSe[id_narudzbine] < Narudzbina[id]
+
+Dobavlja(*^id_biljke, *^id_dobavljaca)
+  Dobavlja[id_biljke] < Biljka[id]
+  Dobavlja[id_dobavljaca] < Dobavljac[id]
+
+Sadrzi(*^id_biljke, *^id_dobavljaca, kolicina, cena)
+  Sadrzi[id_biljke, id_dobavljaca] < Dobavlja[id_biljke, id_dobavljaca]
+  Sadrzi[id_dobavljaca] < Nabavka[id_dobavljaca]
+
+
+```
