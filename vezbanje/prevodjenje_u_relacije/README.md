@@ -47,7 +47,7 @@ K3. Agregirani entiteti i relacije se prevode u zavisnosti od kardinalnosati na 
          
 ```
 
-#### Zadatak 1:
+### Zadatak 1:
 
 ![Primer1](./slike/primer1.png)
 
@@ -217,6 +217,167 @@ Dobavlja(*^id_biljke, *^id_dobavljaca)
 Sadrzi(*^id_biljke, *^id_dobavljaca, kolicina, cena)
   Sadrzi[id_biljke, id_dobavljaca] < Dobavlja[id_biljke, id_dobavljaca]
   Sadrzi[id_dobavljaca] < Nabavka[id_dobavljaca]
+
+
+```
+
+### Zadatak 5:
+
+![Primer5](./slike/primer5.png)
+
+```
+K1:
+Uplatnica(*sifra, datum, iznos, ^id_klijenta)
+  Uplatnica[id_klijenta] < Klijent[id]
+
+Klijent(*id, br_licne_karte, ime, prezime, adresa, ^sifra_trenera)
+  Klijent[sifra_trenera] < Trener[sifra]
+
+Kaseta(*broj, status)
+Trener(*sifra, ime, prezime, skola, telefon, specijalnost, adresa)
+Tretman(*sifra, naziv, jed_mere)
+Program(*sifra, naziv, cena)
+
+K2:
+Zauzeo(*^broj_kaseta, *^id_klijenta, vreme)
+  Zauzeo[broj_kaseta] < Kaseta[broj]
+  Zauzeo[id_klijenta] < Klijent[id]
+
+Pretplata(*^id_klijenta, *^sifra_programa, broj_rata, dat_pretplate, dat_zavrsetka, cena)
+  Pretplata[id_klijenta] < Klijenat[id]
+  Pretplata[sifra_programa] < Program[sifra]
+
+Sprovodi(*^sifra_trenera, *^sifra_tretmana)
+  Sprovodi[sifra_trenera] < Trener[sifra]
+  Sprovodi[sifra_tretmana] < Tretman[sifra]
+
+Obuhvacen(*^sifra_tretmana, *^sifra_programa, trajanje)
+  Obuhvacen[sifra_tretmana] < Tretman[sifra]
+  Obuhvacen[sifra_programa] < Program[sifra]
+
+Koristi(*^id_klijenta, *^sifra_programa, ^sifra_tretmana, ^sifra_trenera)
+  Koristi[id_klijenta, sifra_programa] < Pretplata[id_klijenta, sifra_programa]
+  Koristi[sifra_tretmana, sifra_programa] < Obuhvacen[sifra_tretmana, sifra_programa]
+  Koristi[sifra_trenera] < Trener[sifra]
+
+```
+
+### Zadatak 6:
+
+![Primer6](./slike/primer6.png)
+
+```
+Trener(*sifra, ime, prezime, adresa)
+Klub(*sifra, naziv)
+Atleticar(*sifra, ime, prezime, adresa, dat_rodjenja)
+Takmicenje(*sifra, naziv, mesto, zemlja, trajanje, dat_pocetka)
+Disciplina(*sifra, naziv, srpski_rekord, evropski_rekord, svetski_rekord)
+Borba(*^sifra_takmicenja, stepen, datum, rezultat)
+  Borba[sifra_takmicenja] < Takmicenje[sifra]
+
+AngazovanT(*^sifra_trener, ^sifra_klub)
+  AngazovanT[sifra_trener] < Trener[sifra]
+  AngazovanT[sifra_klub] < Klub[sifra]
+
+AngazovanA(*^sifra_atleticar, ^sifra_klub)
+  AngazovanA[sifra_atleticar] < Atleticar[sifra]
+  AngazovanA[sifra_klub] < Klub[sifra]
+
+Trenira(*^sifra_trener, *^sifra_atleticar, period)
+  Trenira[sifra_trener] < Trener[sifra]
+  Trenira[sifra_atleticar] < Atleticar[sifra]
+
+TakmiciSe(*^sifra_atleticar, *^sifra_disciplina, licni_rekord)
+  TakmiciSe[sifra_atleticar] < Atleticar[sifra]
+  TakmiciSe[sifra_disciplina] < Disciplina[sifra]
+
+Pripada(*^sifra_disciplina, *^sifra_takmicenje)
+  Pripada[sifra_disciplina] < Disciplina[sifra]
+  Pripada[sifra_takmicenje] < Borba[sifra_takmicenje]
+
+UcestvovaoT(*^sifra_atleticar, *^sifra_takmicenje, klub, broj)
+  UcestvovaoT[sifra_atleticar] < Atleticar[sifra]
+  UcestvovaoT[sifra_takmicenje] < Takmicenje[sifra]
+
+UcestvovaoB(*^sifra_atleticar, *^sifra_takmicenje, rezultat, mesto)
+  UcestvovaoB[sifra_atleticar, sifra_takmicenje] < UcestvovaoT[sifra_atleticar, sifra_takmicenje]
+  UcestvovaoB[sifra_takmicenje] < Borba[sifra_takmicenja]
+
+```
+
+### Zadatak 7:
+
+![Primer7](./slike/primer7.png)
+
+```
+
+PolitickaPartija(*id, ime, ^id_biracko_mesto)
+  PolitickaPartija[id_biracko_mesto] < BirackoMesto[id]
+
+Kandidat(*id, ime, prezime, god_rodjenja)
+BirackoMesto(*id, lokacija, ^id_opstina)
+  BirackoMesto[id_opstina] < Opstina[id]
+
+Opstina(*id, naziv)
+Kontrolor(*id, ime, prezime)
+Birac(*JMBG, ime, prezime, adresa)
+
+Kandiduje(*^id_kandidat, ^id_politicka_partija)
+  Kandiduje[id_kandidat] < Kandidat[id]
+  Kandiduje[id_politicka_pratija] < PolitickaPartija[id]
+
+BiraNa(*^id_birac, ^id_biracko_mesto, krug)
+  BiraNa[id_birac] < Birac[id]
+  BiraNa[id_biracko_mesto] < BirackoMesto[id]
+
+Kontrolise(*^id_kontrolor, ^id_biracko_mesto)
+  Kontrolise[id_kontrolor] < Kontrolor[id]
+  Kontrolise[id_biracko_mesto] < BirackoMesto[id]
+
+KontrolisaoGlasanje(*^id_birac, *^id_biracko_mesto, ^id_kontrolor, napomena)
+  KontrolisaoGlasanje[id_birac, id_biracko_mesto] < BiraNa[id_birac, id_biracko_mesto]
+  KontrolisaoGlasanje[id_kontrolor, id_biracko_mesto] < Kontrolise[id_kontrolor, id_biracko_mesto]
+
+```
+
+### Zadatak 8:
+
+![Primer8](./slike/primer8.png)
+
+```
+Koncert(*id, datum, vreme, naziv)
+Izvodjac(*id, web, naziv, telefon, email)
+Album(*id, naziv)
+Menadzer(*id, ime, prezime, telefon)
+Pesma(id, naziv, trajanje, rbr)
+
+Komercijalni(*^id_koncert, cena_ulaznice, ^id_izvodjac, ^id_menadzer)
+  Komercijalni[id_koncert] < Koncert[id]
+  Komercijalni[id_izvodjac] < Izvodjac[id]
+  Komercijalni[id_menadzer] < Menadzer[id]
+
+Humanitarni(*^id_koncert, za_ustanovu)
+  Humanitarni[id_koncert] < Koncert[id]
+
+Sadrzi(*^id_pesma, ^id_album)
+  Sadrzi[id_pesma] < Pesma[id]
+  Sadrzi[id_album] < Album[id]
+
+Snimio(*^id_album, *^id_izvodjac, br_stud_sati)
+  Snimio[id_album] < Album[id]
+  Snimio[id_izvodjac] < Izvodjac[id]
+
+Svira(*^id_izvodjac, *^id_koncert, termin)
+  Svira[id_izvodjac] < Izvodjac[id]
+  Svira[id_koncert] < Koncert[id]
+
+ImaUgovor(*^id_izvodjac, *^id_menadzer, br_ugovora, procenat)
+  ImaUgovor[id_izvodjac] < Izvodjac[id]
+  ImaUgovor[id_menadzer] < Menadzer[id]
+
+Izveo(*^id_pesma, *^id_izvodjac, *^id_koncert)
+  Izveo[id_pesma] < Pesma[id]
+  Izveo[id_izvodjac, id_koncert] < Svira[id_izvodjac, id_koncert]
 
 
 ```
