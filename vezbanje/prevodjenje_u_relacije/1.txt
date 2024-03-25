@@ -1,0 +1,73 @@
+------------- MUZICKI KONCERTI ---------------------
+
+K1:
+Koncert(*id, naziv, datum, vreme)
+Menadzer(*id, ime, prezime, telefon)
+Izvodjac(*id, naziv, web, telefon, email)
+Album(*id, naziv)
+Pesma(*id, naziv, trajanje, rbr)
+
+K2: 
+Komercijalni(*^id, cena, ^id_izvodjac, ^id_menadzer)
+	Komercijalni[id] < Koncert[id]
+	Komercijalni[id_izvodjac, id_menadzer] < ImaUgovor[id_izvodjac, id_menadzer]
+
+Humanitarni(*^id, ustanova)
+	Humanitarni[id] < Koncert[id]
+
+K3:
+Sadrzi(*^id_pesma, ^id_album)
+	Sadrzi[id_pesma] < Pesma[id]
+	Sadrzi[id_album] < Album[id]
+
+Svira(*^id_izvodjac, *^id_koncert, termin)
+	Svira[id_izvodjac] < Izvodjac[id]
+	Svira[id_koncert] < Koncert[id]
+
+Izvodi(*^id_pesma, *^id_izvodjac, *^id_album)
+	Izvodi[id_pesma] < Pesma[id]
+	Izvodi[id_izvodjac, id_album] < Svira[id_izvodjac, id_album]
+
+Snima(*^id_izvodjac, *^id_album)
+	Snima[id_izvodjac] < Izvodjac[id]
+	Snima[id_album] < Album[id]
+
+ImaUgovor(*^id_izvodjac, *^id_menadzer, broj, procenat)
+	ImaUgovor[id_izvodjac] < Izvodjac[id] 
+	ImaUgovor[id_menadzer] < Menadzer[id]
+
+
+------------------ FITNES KLUB -------------------------------------------
+
+Klijent(*id, broj_lk, ime, prezime, ^sifra_trenera)
+	Klijent[sifra_trenera] < Trener[sifra]
+	
+Trener(*sifra, ime, prezime, skola, spec, adresa, tel)
+Kaseta(*id, broj, status)
+Uplatnica(*id, broj, datum, iznos, ^id_klijenta)
+	Uplatnica[id_klijenta] < Klijent[id]
+
+Tretman(*sifra, naziv, trajanje)
+Program(*sifra, naziv, cena)
+
+Uzeo(*^id_klijenta,^id_kaseta, vreme)
+	Uzeo[id_klijenta] < Klijenat[id]
+	Uzeo[id_kaseta] < Kaseta[id]
+
+Sprovodi(*^sifra_trenera, *^sifra_tretmana)
+	Sprovodi[sifra_tretmana] < Tretman[sifra]
+	Sprovodi[sifra_trenera] < Trener[sifra]
+
+Obuhvacen(*^sifra_tretmana, *^sifra_programa, trajanje)
+	Obuhvacen[sifra_tretmana] < Tretman[sifra]
+	Obuhvacen[sifra_programa] < Program[sifra]
+
+Pretplatio(*^id_klijenta, *^sifra_programa, dat_pocetka, dat_zavrsetka, cena, br_rata)
+	Pretplatio[id_klijenta] < Klijenat[id]
+	Pretplatio[sifra_programa] < Program[sifra]
+
+Koriscenje(*^id_klijenta, *^sifra_programa, ^sifra_tretmana, ^sifra_trenera)
+	Koriscenje[id_klijenta, sifra_programa] < Pretplatio[id_klijenta, sifra_programa]
+	Koriscenje[sifra_programa, sifra_tretmana] < Obuhvacen[sifra_programa, sifra_tretmana]
+	Koriscenje[sifra_trenera, sifra_tretmana] < Sprovodi[sifra_trenera, sifra_tretmana]
+
