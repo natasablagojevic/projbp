@@ -1,0 +1,40 @@
+K1:
+Sastojak(*id, naziv, cena, jed_mere)
+Dobavljac(*id, naziv, adresa, telefon)
+Kupac(*id, naziv, adresa, kontakt)
+Narudzbina(*id, nacin_pacanja, datum, ^id_kupac, ^id_racun)
+	Narudzbina[id_kupac] < Kupac[id]
+	Narudzbina[id_racun] < Racun[id]
+
+Racun(*id, ukupan_izons)
+Jelo(*id, cena, dostupna_kolicina)
+
+K2:
+Domaci(*^id)
+	Domaci[id] < Sastojak[id]
+
+Uvezen(*^id, drzava)
+	Uvezen[id] < Sastojak[id]
+
+Nabavka(*^id_dobavljac, datum)
+	Nabavka[id_dobavljac] < Dobavljac[id]
+
+Naplata(*^id_racun, datum, ulacen_iznos, rb_rate)
+	Nalata[id_racun] < Racun[id]
+
+K3:
+Dobavlja(*^id_dobavljac, *^id_sastojak)
+	Dobavlja[id_dobavljac] < Dobavljac[id]
+	Dobavlja[id_sastojak] < Sastojak[id]
+
+SastojiSe(*^id_sastojak, *^id_jelo, kolicina)
+	SastojiSe[id_sastojak] < Sastojak[id]
+	SastojiSe[id_jelo] < Jelo[id]
+
+NalaziSe(*^id_jelo, *^id_narudzbina, cena, kolicina)
+	NalaziSe[id_jelo] < Jelo[id]
+	NalaziSe[id_narudzbina] < Narudzbina[id]
+
+Sadrzi(*^id_dobavljac, *^id_sastojak, cena, kolicina)
+	Sadrzi[id_dobavljac, id_sastojak] < Dobavlja[id_dobavljac, id_sastojak]
+	Sadrzi[id_dobavljac] < Nabavka[id_dobavljac]
