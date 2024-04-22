@@ -45,4 +45,6 @@
 
 - GLEDAMO FAKTOR SELEKTIVNOSTI 
     - KOLIKO PUTA PRISTUPAMO MEMORIJI 
-    
+
+- uklanjanje redova koji su manje selektivni 
+
