@@ -1,0 +1,163 @@
+----------------- PRIMER 1 --------------------
+
+K1:
+	Zaposleni(*JMBG, ime, prezime, adresa, telefon)
+	Autobus(*reg_broj, tip, godina_nabavke, aktivan)
+	Linija(*sifra, pol_stanica, kraj_stanica, trajanje_voznje)
+	ServisnaUsluga(*sifra, naziv, koliko_puta)
+	RezervniDeo(*sifra, naziv, jed_mere, trenutne_zalihe, min_dozv_zalihe)
+
+K2:
+	Vozac(^*JMBG, kateg_voz_doz, zdrav_stanje)
+	Automehanicar(^*JMBG, strucna_sprema)
+
+
+K3:
+	Rasporedjen(*^JMBG_vozac, ^reg_br_aut)
+		Rasporedjen[JMBG_vozac] < Vozac[JMBG]
+		Rasporedjen[reg_br_aut] < Autobus[reg_broj]
+
+	Saobraca(*^reg_br_aut, ^sifra_linija)
+		Saobraca[reg_br_aut] < Autobus[reg_broj]
+		Saobraca[sifra_linija] < Linija[sifra]
+
+	Izvrsava(^*reg_br_aut, *^sifra_su, datum, ^JMBG_autmeh)
+		Izvrsava[reg_br_aut] < Autobus[reg_broj]
+		Izvrsava[sifra_su] < ServisnaUsluga[sifra]
+		Izvrsava[JMBG_autmeh] < Automehanicar[JMBG]
+
+	Potrebni(*^sifra_su, *^sifra_rd, kolicina)
+		Potrebni[sifra_su] < ServisnaUsluga[sifra]
+		Potrebni[sifra_rd] < RezervniDeo[sifra]
+
+	Zamena(*^sifra_rd1, *^sifra_rd2)
+		Zamena[sifra_rd1] < RezervniDeo[sifra]
+		Zamena[sifra_rd2] < RezervniDeo[sifra]
+
+	Koriscen(*^reg_br_aut, *^sifra_su, *^sifra_rd, kolicina)
+		Koriscen[reg_br_aut, sifra_su] < Izvrsava[reg_br_aut, sifra_su]
+		Koriscen[sifra_su, sifra_rd] < Potrebni[sifra_su, sifra_rd]
+
+------------------------- PRIMER 2 ------------------------------------------------
+
+K1:
+	Zaposleni(*JMBG, ime, prezime, adresa, telefon, datum_zas_rad, naziv_rad_mesta)
+	Kupac(*sifra, naziv, adresa, telefon, ^JMBG_p)
+		Kupac[JMBG_p] < Prodavac[JMBG]
+	
+	Narudzbenica(*sifra, datum, status, ^sifra_k)
+		Narudzbenica[sifra_k] < Kupac[sifra]
+ 	
+	Faktura(*id, ukupan_iznos, rok_uplate)
+	Uplatnica(*id, datum, nacin_placanja, ^id_f)
+		Uplatnica[id_f] < Faktura[id]
+	
+	Artikal(*sifra, naziv, rabat, jed_mere, min_dop_zal, kolicina_na_zal)
+	Dobavljac(*sifra, naziv, adresa, telefon)
+
+K2:
+	Prodavac(*^JMBG, provizija)
+		Prodavac[JMBG] < Zaposleni[JMBG]
+
+	Otpremnica(*^sifra_n, datum, ^JMBG_z, ^id_f)
+		Otpremnica[sifra_n] < Narudzbenica[sifra]
+		Otpremnica[JMBG_z] < Zaposleni[JMBG]
+		Otpremnica[id_f] < Faktura[id]
+		
+	Nabavka(*^sifra_d, datum, iznos)
+		Nabavka[sifra_d] < Dobavljac[sifra]
+
+K3:
+	Sadrzi(*^sifra_n, *^sifra_a, cena, kolicina)
+		Sadrzi[sifra_n] < Narudzbenica[sifra]
+		Sadrzi[sifra_a] < Artikal[sifra]
+
+	Dobavlja(*^sifra_a, *^sifra_d)
+		Dobavlja[sifra_a] < Artikal[sifra]
+		Dobavlja[sifra_d] < Dobavljac[sifra]
+
+	Isporuceno(*^sifra_n, *^sifra_a, kolicina)	
+		Isporuceno[sifra_n, sifra_a] < Sadrzi[sifra_n, sifra_a]
+		Isporuceno[sifra_n] < Otpremnica[sifra_n]
+
+	Nabavlja(*^sifra_d, *^sifra_a)
+		Nabavlja[sira_d] < Nabavka[sifra_d]
+		Nabavlja[sifra_d, sifra_a] < Dobavlja[sifra_d, _sifra_a]
+
+------------------------ PRIMER 3 -------------------------------------
+
+K1:
+	Zaposleni(*MBR, ime, prezime, adresa)
+	Apoteka(*sifra, naziv, adresa)
+	Lek(*sifra, naziv, pros_mes_potrebe)
+	Nabavka(*sifra, nacin_placanja, datum_isporuke, ukupni_iznos, ^MBR_k,
+			^sifra_v)
+		Nabavka[MBR_k] < Komercijalista[MBR]
+		Nabavka[sifra_v] < veletrgovina[sifra]
+		
+	Veletrgovina(*sifra, telefon, naziv, adresa)
+
+K2:
+	Farmaceut(*^MBR, strucna_sprema)
+		Farmaceut[MBR] < Zaposleni[MBR]
+
+	Komercijalista(^*MBR, telefon)
+		Komercijalista[MBR] < Zaposleni[MBR]
+
+K3:
+	Zaposlen(^*MBR_f, ^*sifra_a, datum, vreme)
+		Zaposleni[MBR_f] < Farmaceut[MBR]
+		Zaposleni[sifra_a] < Apoteka[sifra]
+
+	Raspolaze(*^sifra_a, ^*sifra_l, kolicina, pros_mes_kolicine)
+		Raspolaze[sifra_a] < Apoteka[sifra]
+		Raspolaze[sifra_l] < Lek[sifra]
+
+	Isporucuje(*^sifra_l, *^sifra_n)
+		Isporucuje[sifra_l] < Lek[sifra]
+		Isporucuje[sifra_n] < Nabavka[sifra]
+
+	Zamena(^*sifra_l1, ^*sifra_l2)
+		Zamena[sifra_l1] < Lek[sifra]
+		Zamena[sifra_l2] < Lek[sifra]
+
+	Isporucen(*^sifra_a, *^sifra_l, *^sifra_n, kolicina)
+		Isporucen[sifra_a] < Apoteka[sifra]
+		Isporucen[sifra_l, sifra_n] < Isporucuje[sifra_l, sifra_n]
+
+------------------------- PRIMER 4 -------------------------------------
+
+K1:
+	Biljka(*id, naziv, jed_mere, kolicina, min_doz_zalihe, akt_cena)
+	Dobavljac(*id, naziv, adresa, drzava, telefon)
+	Mesavina(*id, jed_mere, cena, kol_za_zalihama)
+	Narudzbina(*id, datum, uslovi_placanja, ^id_r, ^id_k)
+		Narudzbina[id_r] < Racun[id]
+		Narudzbina[id_k] < Kupac[id]
+	
+	Kupac(*id, naziv, adresa, telefon, osoba_za_kontakt)
+	Racun(*id, ukupan_iznos)
+
+K2:
+	Nabavka(^*id_d, datum)
+		Nabavka[id_d] < Dobavljac[id]
+
+	Naplata(^id_r, datum_naplate, uplacen_iznos, rb_rate)
+		Naplata[id_r] < Racun[id]
+
+K3:
+	SastojiSeOd(*^id_m, *^id_b, kolicina)
+		SastojiSeOd[id_m] < Mesavina[id]
+		SastojiSeOd[id_b] < Biljka[id]
+
+	Dobavlja(*^id_d, *^id_b)	
+		Dobavlja[id_d] < Dobavljac[id]
+		Dobavlja[id_b] < Biljka[id]
+
+	NalaziSe(*^id_m, ^*id_n, cena, kolicina)
+		NalaziSe[id_m] < Mesavina[id]
+		NalaziSe[id_n] < Narudzbina[id]
+
+	Sadrzi(*^id_d, *^id_b, cena, kolicina)
+		Sadrzi[id_d] < Nabavka[id_d]
+		Sadrzi[id_d, id_b] < Dobavlja[id_d, id_b]

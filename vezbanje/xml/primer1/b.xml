@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8">
+
+<model>
+  <Kompanija PIB="K01" Naziv="Kompanija1" />
+  <Kompanija PIB="K02" Naziv="Kompanija2" />
+  <Avion LID="L01" BrojSedista="5" BrojMotora="2" PIBProizvodjaca="K01" PIBVlasnik="K02"/>
+  <Avion LID="L02" BrojSedista="10" BrojMotora="4" PIBProizvodjaca="K02" PIBVlasnik="K02"/>
+</model>
